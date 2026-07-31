@@ -14,6 +14,35 @@ async function main(): Promise<void> {
     console.log("Bot logged in successfully");
   });
 
+  eventManager.on("bot:spawn", () => {
+    console.log("Bot spawned - starting autonomous behavior");
+    bot.chat("mc-agent online. Type !help for commands.");
+    wanderAround(bot);
+  });
+
+  const wanderAround = async (bot: Bot) => {
+    const directions = [
+      { x: 0, y: 64, z: 10 },
+      { x: 10, y: 64, z: 0 },
+      { x: 0, y: 64, z: -10 },
+      { x: -10, y: 64, z: 0 },
+    ];
+    let i = 0;
+    while (bot.isReady) {
+      try {
+        const dest = directions[i % directions.length]!;
+        console.log(`[auto] Walking to ${dest.x}, ${dest.y}, ${dest.z}`);
+        await bot.moveTo(dest.x, dest.y, dest.z);
+        console.log(`[auto] Arrived at ${dest.x}, ${dest.y}, ${dest.z}`);
+        await new Promise((r) => setTimeout(r, 5000));
+        i++;
+      } catch {
+        console.log("[auto] Wander interrupted, retrying...");
+        await new Promise((r) => setTimeout(r, 3000));
+      }
+    }
+  };
+
   eventManager.on("bot:chat", ({ sender, message }) => {
     const lowerMessage = message.toLowerCase().trim();
     const commandName = lowerMessage.startsWith("!") ? lowerMessage.slice(1) : lowerMessage;
