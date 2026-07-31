@@ -10,6 +10,7 @@ export interface BotConfig {
   defaultFollowDistance: number;
   defaultMovementSpeed: number;
   microsoftRefreshToken?: string | undefined;
+  serverPassword?: string | undefined;
 }
 
 export interface CommandMetadata {

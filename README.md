@@ -38,6 +38,7 @@ Copy `.env.example` to `.env` and configure:
 | `USERNAME` | Bot username | `mc-agent` |
 | `AUTHENTICATION_TYPE` | `microsoft`, `mojang`, or `offline` | `offline` |
 | `MICROSOFT_REFRESH_TOKEN` | Microsoft refresh token for headless auth | (empty) |
+| `SERVER_PASSWORD` | Password for cracked server registration/login | (empty) |
 | `VIEWER_ENABLED` | Enable prismarine-viewer | `false` |
 | `LOGGING_LEVEL` | `error`, `warn`, `info`, or `debug` | `info` |
 | `RECONNECT_DELAY` | Reconnect delay in ms | `5000` |
@@ -56,6 +57,14 @@ When `AUTHENTICATION_TYPE=microsoft`, the bot normally opens a browser for login
 4. Add it to your `.env` on the server
 
 **Security:** Store refresh tokens securely. They grant access to the associated Microsoft account. Do not commit them to version control.
+
+### Cracked Server Authentication
+
+Some offline-mode servers require players to register or login with a password. Set `SERVER_PASSWORD` in your `.env` and the bot will automatically respond to `/register` and `/login` prompts.
+
+```env
+SERVER_PASSWORD=yourpassword
+```
 
 ## Running
 

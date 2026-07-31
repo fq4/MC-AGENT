@@ -16,6 +16,7 @@ const ConfigSchema = z.object({
   DEFAULT_FOLLOW_DISTANCE: z.coerce.number().positive("DEFAULT_FOLLOW_DISTANCE must be positive").default(6),
   DEFAULT_MOVEMENT_SPEED: z.coerce.number().positive("DEFAULT_MOVEMENT_SPEED must be positive").default(1.2),
   MICROSOFT_REFRESH_TOKEN: z.string().optional(),
+  SERVER_PASSWORD: z.string().optional(),
 });
 
 const parsed = ConfigSchema.safeParse(process.env);
@@ -42,4 +43,5 @@ export const config: BotConfig = {
   defaultFollowDistance: env.DEFAULT_FOLLOW_DISTANCE,
   defaultMovementSpeed: env.DEFAULT_MOVEMENT_SPEED,
   microsoftRefreshToken: env.MICROSOFT_REFRESH_TOKEN,
+  serverPassword: env.SERVER_PASSWORD,
 };

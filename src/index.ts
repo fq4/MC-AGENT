@@ -56,6 +56,23 @@ async function main(): Promise<void> {
 
   eventManager.on("bot:chat", ({ sender, message }) => {
     const lowerMessage = message.toLowerCase().trim();
+
+    if (config.serverPassword) {
+      const lower = lowerMessage;
+      if (lower.includes("register") || lower.includes("login") || lower.includes("logged in")) {
+        const username = config.username;
+        const password = config.serverPassword;
+        if (lower.includes("register")) {
+          bot.chat(`/register ${password}`);
+          console.log("[auth] Auto-registering...");
+        } else if (lower.includes("login")) {
+          bot.chat(`/login ${username} ${password}`);
+          console.log("[auth] Auto-logging in...");
+        }
+        return;
+      }
+    }
+
     const commandName = lowerMessage.startsWith("!") ? lowerMessage.slice(1) : lowerMessage;
 
     if (bot.commands.has(commandName)) {
