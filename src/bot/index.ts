@@ -146,6 +146,14 @@ export class Bot {
       this.events.emit("bot:whisper", { sender: username, message });
     });
 
+    bot.on("message", (message) => {
+      this.logger.debug(`Message: ${JSON.stringify(message)}`);
+    });
+
+    bot.on("actionBar", (message) => {
+      this.logger.debug(`ActionBar: ${JSON.stringify(message)}`);
+    });
+
     bot.on("health", () => {
       this.events.emit("bot:health", { health: bot.health });
     });

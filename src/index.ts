@@ -29,6 +29,14 @@ async function main(): Promise<void> {
       const nearby = Object.values((mf as { entities: Record<string, { name?: string }> }).entities).filter((e) => e.name && e.name !== mf.username);
       console.log(`[status] pos=${pos ? `${pos.x},${pos.y},${pos.z}` : "?"} hp=${health ?? "?"} food=${food ?? "?"} nearby=${nearby.length}`);
     }, 30000);
+
+    if (config.serverPassword) {
+      setTimeout(() => {
+        if (!bot.isReady) {return;}
+        console.log("[auth] Sending delayed /register as fallback");
+        bot.chat(`/register ${config.serverPassword}`);
+      }, 3000);
+    }
   });
 
   const wanderAround = async (bot: Bot) => {
