@@ -1,6 +1,6 @@
 import mineflayer, { Bot as MineflayerBot, BotOptions } from "mineflayer";
 import pathfinder from "mineflayer-pathfinder";
-import pvp from "mineflayer-pvp";
+import { plugin as pvpPlugin } from "mineflayer-pvp";
 import { createLogger, Logger } from "../logger/index.js";
 import { eventManager, EventManager } from "../events/index.js";
 import { commandRegistry, CommandExecutor } from "../commands/index.js";
@@ -47,7 +47,7 @@ export class Bot {
 
       this.mineflayerBot = mineflayer.createBot(options);
       (this.mineflayerBot as MineflayerBot & Record<string, unknown>).loadPlugin?.(pathfinder as unknown as Parameters<MineflayerBot["loadPlugin"]>[0]);
-      (this.mineflayerBot as MineflayerBot & Record<string, unknown>).loadPlugin?.(pvp as unknown as Parameters<MineflayerBot["loadPlugin"]>[0]);
+      (this.mineflayerBot as MineflayerBot & Record<string, unknown>).loadPlugin?.(pvpPlugin as unknown as Parameters<MineflayerBot["loadPlugin"]>[0]);
       this.setupEventListeners();
       this.isConnected = true;
       this.reconnectAttempts = 0;
