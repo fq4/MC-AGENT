@@ -1,5 +1,5 @@
 import mineflayer, { Bot as MineflayerBot, BotOptions } from "mineflayer";
-import pathfinder from "mineflayer-pathfinder";
+import { pathfinder } from "mineflayer-pathfinder";
 import { plugin as pvpPlugin } from "mineflayer-pvp";
 import { createLogger, Logger } from "../logger/index.js";
 import { eventManager, EventManager } from "../events/index.js";
