@@ -1,0 +1,16 @@
+node_modules
+dist
+logs
+*.log
+.env
+.env.*
+!.env.example
+data
+coverage
+.nyc_output
+.vscode
+.idea
+.DS_Store
+tmp
+*.tmp
+*.bak

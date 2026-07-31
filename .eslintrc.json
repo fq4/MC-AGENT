@@ -1,0 +1,38 @@
+{
+  "languageOptions": {
+    "ecmaVersion": "ES2022",
+    "sourceType": "module",
+    "globals": {
+      "console": "readonly",
+      "process": "readonly",
+      "require": "readonly",
+      "module": "readonly",
+      "__dirname": "readonly",
+      "__filename": "readonly",
+      "Buffer": "readonly",
+      "setTimeout": "readonly",
+      "clearTimeout": "readonly",
+      "setInterval": "readonly",
+      "clearInterval": "readonly"
+    }
+  },
+  "rules": {
+    "no-unused-vars": "error",
+    "no-undef": "error",
+    "no-console": "off",
+    "semi": ["error", "always"],
+    "quotes": ["error", "double"],
+    "indent": ["error", 2],
+    "eqeqeq": ["error", "always"],
+    "curly": ["error", "all"],
+    "no-var": "error",
+    "prefer-const": "error",
+    "no-shadow": "error",
+    "no-prototype-builtins": "error",
+    "no-await-in-loop": "warn"
+  },
+  "env": {
+    "node": true,
+    "es2022": true
+  }
+}
