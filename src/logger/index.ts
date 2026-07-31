@@ -41,6 +41,7 @@ export const createLogger = (config: BotConfig): winston.Logger => {
     }),
     new winston.transports.File({
       filename: path.join(LOGS_DIR, "combined.log"),
+      level: "debug",
       format: logFormat,
       maxsize: 5 * 1024 * 1024,
       maxFiles: 5,

@@ -132,8 +132,8 @@ export class Bot {
     });
 
     bot.on("kicked", (reason) => {
-      this.logger.warn(`Kicked from server: ${reason}`);
-      this.events.emit("bot:kicked", { reason });
+      this.logger.warn(`Kicked from server: ${JSON.stringify(reason)}`);
+      this.events.emit("bot:kicked", { reason: typeof reason === "string" ? reason : JSON.stringify(reason) });
     });
 
     bot.on("chat", (username, message) => {
