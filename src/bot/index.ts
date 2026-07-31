@@ -1,6 +1,7 @@
 import mineflayer, { Bot as MineflayerBot, BotOptions } from "mineflayer";
 import { pathfinder } from "mineflayer-pathfinder";
 import { plugin as pvpPlugin } from "mineflayer-pvp";
+import { mineflayer as viewer } from "prismarine-viewer";
 import { createLogger, Logger } from "../logger/index.js";
 import { eventManager, EventManager } from "../events/index.js";
 import { commandRegistry, CommandExecutor } from "../commands/index.js";
@@ -44,10 +45,18 @@ export class Bot {
       } as BotOptions;
 
       this.mineflayerBot = mineflayer.createBot(options);
-
-      this.mineflayerBot = mineflayer.createBot(options);
       (this.mineflayerBot as MineflayerBot & Record<string, unknown>).loadPlugin?.(pathfinder as unknown as Parameters<MineflayerBot["loadPlugin"]>[0]);
       (this.mineflayerBot as MineflayerBot & Record<string, unknown>).loadPlugin?.(pvpPlugin as unknown as Parameters<MineflayerBot["loadPlugin"]>[0]);
+
+      if (this.botConfig.viewerEnabled) {
+        try {
+          viewer(this.mineflayerBot, {});
+          this.logger.info("Viewer enabled");
+        } catch (error) {
+          this.logger.warn("Failed to start viewer:", error as Error);
+        }
+      }
+
       this.setupEventListeners();
       this.isConnected = true;
       this.reconnectAttempts = 0;
