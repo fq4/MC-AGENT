@@ -16,6 +16,7 @@ export class Bot {
   private reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
   private currentTask: (() => void) | null = null;
   private isConnected = false;
+  private viewerStarted = false;
 
   public readonly commands = commandRegistry;
   public readonly commandExecutor = new CommandExecutor(this.commands);
@@ -47,16 +48,6 @@ export class Bot {
       this.mineflayerBot = mineflayer.createBot(options);
       (this.mineflayerBot as MineflayerBot & Record<string, unknown>).loadPlugin?.(pathfinder as unknown as Parameters<MineflayerBot["loadPlugin"]>[0]);
       (this.mineflayerBot as MineflayerBot & Record<string, unknown>).loadPlugin?.(pvpPlugin as unknown as Parameters<MineflayerBot["loadPlugin"]>[0]);
-
-      if (this.botConfig.viewerEnabled) {
-        try {
-          viewer(this.mineflayerBot, {});
-          this.logger.info("Viewer enabled");
-        } catch (error) {
-          this.logger.warn("Failed to start viewer:", error as Error);
-        }
-      }
-
       this.setupEventListeners();
       this.isConnected = true;
       this.reconnectAttempts = 0;
@@ -110,6 +101,16 @@ export class Bot {
             z: bot.entity.position.z,
           },
         });
+      }
+
+      if (this.botConfig.viewerEnabled && !this.viewerStarted) {
+        this.viewerStarted = true;
+        try {
+          viewer(this.mineflayerBot!, {});
+          this.logger.info("Viewer enabled");
+        } catch (error) {
+          this.logger.warn("Failed to start viewer:", error as Error);
+        }
       }
     });
 
