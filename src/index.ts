@@ -55,6 +55,8 @@ async function main(): Promise<void> {
   };
 
   eventManager.on("bot:chat", ({ sender, message }) => {
+    console.log(`[chat] <${sender}> ${message}`);
+
     const lowerMessage = message.toLowerCase().trim();
 
     if (config.serverPassword) {
