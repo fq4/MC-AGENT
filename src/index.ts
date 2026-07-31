@@ -18,6 +18,17 @@ async function main(): Promise<void> {
     console.log("Bot spawned - starting autonomous behavior");
     bot.chat("mc-agent online. Type !help for commands.");
     wanderAround(bot);
+    setInterval(() => {
+      if (!bot.isReady) {return;}
+      const mf = bot.getMineflayerBot();
+      if (!mf) {return;}
+      const entity = (mf as { entity?: { position: { x: number; y: number; z: number } } }).entity;
+      const pos = entity?.position;
+      const health = (mf as { health?: number }).health;
+      const food = (mf as { food?: number }).food;
+      const nearby = Object.values((mf as { entities: Record<string, { name?: string }> }).entities).filter((e) => e.name && e.name !== mf.username);
+      console.log(`[status] pos=${pos ? `${pos.x},${pos.y},${pos.z}` : "?"} hp=${health ?? "?"} food=${food ?? "?"} nearby=${nearby.length}`);
+    }, 30000);
   });
 
   const wanderAround = async (bot: Bot) => {

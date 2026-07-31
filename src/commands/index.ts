@@ -10,6 +10,7 @@ import {
   attackCommand,
   inventoryCommand,
   sayCommand,
+  statusCommand,
 } from "./commands.js";
 
 export const commandRegistry = new CommandRegistry();
@@ -25,6 +26,7 @@ export function registerCommands(): void {
     attackCommand,
     inventoryCommand,
     sayCommand,
+    statusCommand,
   ];
 
   for (const command of commands) {

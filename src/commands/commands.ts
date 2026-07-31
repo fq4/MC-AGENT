@@ -195,3 +195,38 @@ export const sayCommand = {
     ctx.bot.chat(message);
   },
 };
+
+export const statusCommand = {
+  metadata: {
+    name: "status",
+    aliases: ["info", "pos"],
+    description: "Show bot status and surroundings",
+    usage: "status",
+    arguments: [],
+    permissions: [],
+  },
+  execute: async (ctx: CommandContext) => {
+    const mf = ctx.bot.getMineflayerBot();
+    if (!mf) {return;}
+
+    const entity = (mf as { entity?: { position: { x: number; y: number; z: number } } }).entity;
+    const pos = entity?.position;
+    const health = (mf as { health?: number }).health;
+    const food = (mf as { food?: number }).food;
+    const items = (mf as { inventory: { items: () => Array<{ name: string; count: number }> } }).inventory.items();
+
+    const nearby = Object.values((mf as { entities: Record<string, { name?: string }> }).entities)
+      .filter((e) => e.name && e.name !== (mf as { username: string }).username)
+      .map((e) => e.name as string)
+      .slice(0, 10);
+
+    const status = [
+      `Pos: ${pos ? `${pos.x}, ${pos.y}, ${pos.z}` : "unknown"}`,
+      `Health: ${health ?? "?"} Food: ${food ?? "?"}`,
+      `Inventory: ${items.length === 0 ? "empty" : items.map((i) => `${i.name} x${i.count}`).join(", ")}`,
+      `Nearby: ${nearby.length === 0 ? "none" : nearby.join(", ")}`,
+    ].join(" | ");
+
+    ctx.bot.chat(status);
+  },
+};
