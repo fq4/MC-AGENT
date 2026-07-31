@@ -37,12 +37,25 @@ Copy `.env.example` to `.env` and configure:
 | `SERVER_PORT` | Minecraft server port | `25565` |
 | `USERNAME` | Bot username | `mc-agent` |
 | `AUTHENTICATION_TYPE` | `microsoft`, `mojang`, or `offline` | `offline` |
+| `MICROSOFT_REFRESH_TOKEN` | Microsoft refresh token for headless auth | (empty) |
 | `VIEWER_ENABLED` | Enable prismarine-viewer | `false` |
 | `LOGGING_LEVEL` | `error`, `warn`, `info`, or `debug` | `info` |
 | `RECONNECT_DELAY` | Reconnect delay in ms | `5000` |
 | `MAX_RECONNECT_ATTEMPTS` | Max reconnect attempts | `10` |
 | `DEFAULT_FOLLOW_DISTANCE` | Follow distance in blocks | `6` |
 | `DEFAULT_MOVEMENT_SPEED` | Movement speed multiplier | `1.2` |
+
+### Microsoft Authentication (Headless)
+
+When `AUTHENTICATION_TYPE=microsoft`, the bot normally opens a browser for login. For headless/server environments, set `MICROSOFT_REFRESH_TOKEN` to a valid refresh token. The bot will use it directly without opening a browser.
+
+**Obtaining a refresh token:**
+1. Run the bot locally with `AUTHENTICATION_TYPE=microsoft` and no `MICROSOFT_REFRESH_TOKEN`
+2. Complete the Microsoft login in the opened browser
+3. Copy the refresh token from the logs (or inspect the session)
+4. Add it to your `.env` on the server
+
+**Security:** Store refresh tokens securely. They grant access to the associated Microsoft account. Do not commit them to version control.
 
 ## Running
 

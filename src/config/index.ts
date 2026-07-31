@@ -15,6 +15,7 @@ const ConfigSchema = z.object({
   MAX_RECONNECT_ATTEMPTS: z.coerce.number().int().nonnegative("MAX_RECONNECT_ATTEMPTS must be non-negative").default(10),
   DEFAULT_FOLLOW_DISTANCE: z.coerce.number().positive("DEFAULT_FOLLOW_DISTANCE must be positive").default(6),
   DEFAULT_MOVEMENT_SPEED: z.coerce.number().positive("DEFAULT_MOVEMENT_SPEED must be positive").default(1.2),
+  MICROSOFT_REFRESH_TOKEN: z.string().optional(),
 });
 
 const parsed = ConfigSchema.safeParse(process.env);
@@ -40,4 +41,5 @@ export const config: BotConfig = {
   maxReconnectAttempts: env.MAX_RECONNECT_ATTEMPTS,
   defaultFollowDistance: env.DEFAULT_FOLLOW_DISTANCE,
   defaultMovementSpeed: env.DEFAULT_MOVEMENT_SPEED,
+  microsoftRefreshToken: env.MICROSOFT_REFRESH_TOKEN,
 };

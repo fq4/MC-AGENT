@@ -30,16 +30,20 @@ export class Bot {
     try {
       this.logger.info(`Connecting to ${this.botConfig.serverHost}:${this.botConfig.serverPort} as ${this.botConfig.username}`);
 
-      const authValue: "microsoft" | "mojang" | "offline" | ((_client: unknown, _options: unknown) => void) = this.botConfig.authenticationType === "offline"
-        ? "offline"
-        : (this.botConfig.authenticationType as "microsoft" | "mojang");
+      const authValue = this.botConfig.authenticationType === "offline"
+        ? false
+        : this.botConfig.authenticationType === "microsoft" && this.botConfig.microsoftRefreshToken
+          ? { type: "microsoft" as const, refreshToken: this.botConfig.microsoftRefreshToken }
+          : (this.botConfig.authenticationType as "microsoft" | "mojang");
 
-      const options: BotOptions = {
+      const options = {
         host: this.botConfig.serverHost,
         port: this.botConfig.serverPort,
         username: this.botConfig.username,
         auth: authValue,
-      };
+      } as BotOptions;
+
+      this.mineflayerBot = mineflayer.createBot(options);
 
       this.mineflayerBot = mineflayer.createBot(options);
       (this.mineflayerBot as MineflayerBot & Record<string, unknown>).loadPlugin?.(pathfinder as unknown as Parameters<MineflayerBot["loadPlugin"]>[0]);

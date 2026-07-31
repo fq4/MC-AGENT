@@ -9,6 +9,7 @@ export interface BotConfig {
   maxReconnectAttempts: number;
   defaultFollowDistance: number;
   defaultMovementSpeed: number;
+  microsoftRefreshToken?: string | undefined;
 }
 
 export interface CommandMetadata {
