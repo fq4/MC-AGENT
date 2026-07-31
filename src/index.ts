@@ -11,14 +11,18 @@ async function main(): Promise<void> {
   registerBehaviors();
 
   const handleAuth = (bot: Bot, message: string) => {
-    if (!config.serverPassword) {return;}
+    if (!config.serverPassword) {
+      console.log("[auth] No SERVER_PASSWORD configured, skipping auto-auth");
+      return;
+    }
     const lower = message.toLowerCase();
+    console.log(`[auth] Checking message: "${message}" | includes register: ${lower.includes("register")} | includes login: ${lower.includes("login")}`);
     if (lower.includes("register")) {
       bot.chat(`/register ${config.serverPassword} ${config.serverPassword}`);
-      console.log("[auth] Auto-registering with /register <password> <repeat>");
+      console.log("[auth] Sent /register command");
     } else if (lower.includes("login")) {
       bot.chat(`/login ${config.username} ${config.serverPassword}`);
-      console.log("[auth] Auto-logging in with /login <username> <password>");
+      console.log("[auth] Sent /login command");
     }
   };
 
@@ -58,8 +62,8 @@ async function main(): Promise<void> {
       setTimeout(() => {
         if (!bot.isReady) {return;}
         console.log("[auth] Sending delayed /register as fallback");
-        bot.chat(`/register ${config.serverPassword}`);
-      }, 3000);
+        bot.chat(`/register ${config.serverPassword} ${config.serverPassword}`);
+      }, 5000);
     }
   });
 
