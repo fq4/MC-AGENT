@@ -10,6 +10,30 @@ async function main(): Promise<void> {
   registerCommands();
   registerBehaviors();
 
+  const handleAuth = (bot: Bot, message: string) => {
+    if (!config.serverPassword) {return;}
+    const lower = message.toLowerCase();
+    if (lower.includes("register")) {
+      bot.chat(`/register ${config.serverPassword} ${config.serverPassword}`);
+      console.log("[auth] Auto-registering with /register <password> <repeat>");
+    } else if (lower.includes("login")) {
+      bot.chat(`/login ${config.username} ${config.serverPassword}`);
+      console.log("[auth] Auto-logging in with /login <username> <password>");
+    }
+  };
+
+  const handleCommand = (bot: Bot, sender: string, message: string) => {
+    const lowerMessage = message.toLowerCase().trim();
+    const commandName = lowerMessage.startsWith("!") ? lowerMessage.slice(1) : lowerMessage;
+    if (bot.commands.has(commandName)) {
+      const args = message.split(" ");
+      const senderName = args.shift() || sender;
+      bot.commandExecutor.execute(commandName, { bot, args, sender: senderName }).catch((error: unknown) => {
+        console.error(`Failed to execute command ${commandName}:`, error);
+      });
+    }
+  };
+
   eventManager.on("bot:login", () => {
     console.log("Bot logged in successfully");
   });
@@ -64,39 +88,13 @@ async function main(): Promise<void> {
 
   eventManager.on("bot:chat", ({ sender, message }) => {
     console.log(`[chat] <${sender}> ${message}`);
+    handleAuth(bot, message);
+    handleCommand(bot, sender, message);
+  });
 
-    const lowerMessage = message.toLowerCase().trim();
-
-    if (config.serverPassword) {
-      const lower = lowerMessage;
-      if (lower.includes("register") || lower.includes("login") || lower.includes("logged in")) {
-        const username = config.username;
-        const password = config.serverPassword;
-        if (lower.includes("register")) {
-          bot.chat(`/register ${password}`);
-          console.log("[auth] Auto-registering...");
-        } else if (lower.includes("login")) {
-          bot.chat(`/login ${username} ${password}`);
-          console.log("[auth] Auto-logging in...");
-        }
-        return;
-      }
-    }
-
-    const commandName = lowerMessage.startsWith("!") ? lowerMessage.slice(1) : lowerMessage;
-
-    if (bot.commands.has(commandName)) {
-      const args = message.split(" ");
-      const senderName = args.shift() || sender;
-
-      bot.commandExecutor.execute(commandName, {
-        bot,
-        args,
-        sender: senderName,
-      }).catch((error: unknown) => {
-        console.error(`Failed to execute command ${commandName}:`, error);
-      });
-    }
+  eventManager.on("bot:systemMessage", ({ message }) => {
+    console.log(`[system] ${message}`);
+    handleAuth(bot, message);
   });
 
   eventManager.on("bot:error", ({ error }) => {

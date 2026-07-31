@@ -77,6 +77,7 @@ export interface EventMap {
   "bot:pathfinding": { status: string };
   "bot:entity_interaction": { entityType: string; action: string };
   "bot:error": { error: Error };
+  "bot:systemMessage": { message: string };
 }
 
 export type EventName = keyof EventMap;

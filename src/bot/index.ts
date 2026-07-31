@@ -9,6 +9,29 @@ import { behaviorManager } from "../behaviors/index.js";
 import { PluginManager } from "../plugins/index.js";
 import { BotConfig } from "../types/index.js";
 
+const extractMessageText = (message: unknown): string => {
+  if (typeof message === "string") {return message;}
+  if (typeof message !== "object" || message === null) {return String(message);}
+
+  const obj = message as Record<string, unknown>;
+
+  if (typeof obj.json === "object" && obj.json !== null) {
+    const json = obj.json as Record<string, unknown>;
+    if (Array.isArray(json.extra)) {
+      return json.extra.map((part: Record<string, unknown>) => typeof part.text === "string" ? part.text : "").join("");
+    }
+    if (typeof json.text === "string") {return json.text;}
+  }
+
+  if (Array.isArray(obj.extra)) {
+    return obj.extra.map((part: Record<string, unknown>) => typeof part.text === "string" ? part.text : "").join("");
+  }
+
+  if (typeof obj.text === "string") {return obj.text;}
+
+  return JSON.stringify(message);
+};
+
 export class Bot {
   private mineflayerBot: MineflayerBot | null = null;
   private logger: Logger;
@@ -147,7 +170,9 @@ export class Bot {
     });
 
     bot.on("message", (message) => {
-      this.logger.debug(`Message: ${JSON.stringify(message)}`);
+      const text = extractMessageText(message);
+      this.logger.debug(`Message: ${text}`);
+      this.events.emit("bot:systemMessage", { message: text });
     });
 
     bot.on("actionBar", (message) => {
