@@ -2,7 +2,7 @@ import { z } from "zod";
 import dotenv from "dotenv";
 import { BotConfig } from "../types/index.js";
 
-dotenv.config();
+dotenv.config({ override: true });
 
 const ConfigSchema = z.object({
   SERVER_HOST: z.string().min(1, "SERVER_HOST is required"),
