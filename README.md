@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="MCA_Logo.jpg" alt="MCA Logo" width="200">
+</p>
+
 # MC-Agent
 
 A modern, production-quality, headless Minecraft Java Edition agent built with Mineflayer and TypeScript.
