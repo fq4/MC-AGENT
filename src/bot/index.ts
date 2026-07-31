@@ -68,7 +68,7 @@ export class Bot {
 
     if (this.mineflayerBot) {
       this.mineflayerBot.removeAllListeners();
-      this.mineflayerBot.quit();
+      this.mineflayerBot.end();
       this.mineflayerBot = null;
     }
 
