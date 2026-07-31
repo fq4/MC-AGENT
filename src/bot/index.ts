@@ -1,5 +1,5 @@
 import mineflayer, { Bot as MineflayerBot, BotOptions } from "mineflayer";
-import { pathfinder } from "mineflayer-pathfinder";
+import pathfinderPlugin from "mineflayer-pathfinder";
 import { plugin as pvpPlugin } from "mineflayer-pvp";
 import { mineflayer as viewer } from "prismarine-viewer";
 import { createLogger, Logger } from "../logger/index.js";
@@ -8,6 +8,9 @@ import { commandRegistry, CommandExecutor } from "../commands/index.js";
 import { behaviorManager } from "../behaviors/index.js";
 import { PluginManager } from "../plugins/index.js";
 import { BotConfig } from "../types/index.js";
+
+const pathfinder = pathfinderPlugin.pathfinder;
+const goals = pathfinderPlugin.goals;
 
 const extractMessageText = (message: unknown): string => {
   if (typeof message === "string") {return message;}
@@ -235,10 +238,7 @@ export class Bot {
 
   async moveTo(x: number, y: number, z: number): Promise<void> {
     if (!this.mineflayerBot) {return;}
-    await this.mineflayerBot.pathfinder.setGoal(
-      { x, y, z } as unknown as Parameters<typeof this.mineflayerBot.pathfinder.setGoal>[0],
-      true
-    );
+    await this.mineflayerBot.pathfinder.setGoal(new goals.GoalBlock(x, y, z));
   }
 
   async followPlayer(username: string): Promise<void> {
@@ -247,7 +247,7 @@ export class Bot {
     if (!entity) {
       throw new Error(`Player ${username} not found`);
     }
-    await (this.mineflayerBot.pathfinder as unknown as { follow: (_entity: unknown, _distance: number) => Promise<void> }).follow(entity, this.botConfig.defaultFollowDistance);
+    await this.mineflayerBot.pathfinder.setGoal(new goals.GoalFollow(entity, this.botConfig.defaultFollowDistance));
   }
 
   async mineBlock(blockName: string): Promise<void> {
@@ -261,10 +261,7 @@ export class Bot {
       throw new Error(`Block ${blockName} not found nearby`);
     }
 
-    await this.mineflayerBot.pathfinder.setGoal(
-      { x: block.position.x, y: block.position.y, z: block.position.z } as unknown as Parameters<typeof this.mineflayerBot.pathfinder.setGoal>[0],
-      true
-    );
+    await this.mineflayerBot.pathfinder.setGoal(new goals.GoalBlock(block.position.x, block.position.y, block.position.z));
 
     await this.mineflayerBot.dig(block);
   }
